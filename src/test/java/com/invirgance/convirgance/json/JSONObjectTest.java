@@ -105,6 +105,46 @@ public class JSONObjectTest
     }
     
     @Test
+    public void testInts()
+    {
+        JSONObject record = new JSONObject();
+        
+        record.put("integer", 1337);
+        record.put("integerString", "1337");
+        record.put("integerNull", null);
+        record.put("notInteger", false);
+        
+        assertEquals(1337, (Integer)record.get("integer"));
+        assertEquals(1337, record.getInt("integer"));
+        assertEquals(1337, record.getInt("integerString"));
+        assertEquals(1337, record.getInt("integer", 7331));
+        assertEquals(1337, record.getInt("integerString", 7331));
+        assertEquals(1337, record.getInt("integerNull", 1337));
+        assertNull(record.get("booleanNull"));
+        
+        try 
+        {
+            record.getInt("integerNull");
+            fail("Expected failure on null lookup");
+        } 
+        catch(ConvirganceException e) { assertEquals("integerNull is null and therefore can't be converted to an int", e.getMessage()); }
+        
+        try 
+        {
+            record.getInt("notInteger");
+            fail("Expected failure on lookup of non-boolean value");
+        } 
+        catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notInteger cannot be converted to an int", e.getMessage()); }
+        
+        try 
+        {
+            record.getInt("notInteger", 1337);
+            fail("Expected failure on lookup of non-boolean value");
+        } 
+        catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notInteger cannot be converted to an int", e.getMessage()); }
+    }
+    
+    @Test
     public void testStrings()
     {
         JSONObject record = new JSONObject();

@@ -114,6 +114,28 @@ public class JSONObject implements Map<String, Object>
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a boolean");
     }
     
+    public int getInt(String key) throws ConvirganceException
+    {
+        Object value = this.map.get(key);
+        
+        if(value == null) throw new ConvirganceException(key + " is null and therefore can't be converted to an int");
+        if(value instanceof Integer) return ((Integer)value);
+        if(value instanceof String) return Integer.parseInt(value.toString());
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to an int");
+    }
+    
+    public int getInt(String key, int defaultValue) throws ConvirganceException
+    {
+        Object value = this.map.get(key);
+        
+        if(value == null) return defaultValue;
+        if(value instanceof Integer) return ((Integer)value);
+        if(value instanceof String) return Integer.parseInt(value.toString());
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to an int");
+    }
+    
     public String getString(String key)
     {
         Object value = this.map.get(key);
