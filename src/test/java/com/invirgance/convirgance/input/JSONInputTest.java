@@ -38,6 +38,7 @@ public class JSONInputTest
     {
         int count = 0;
         
+        assertFalse(new JSONInput().read(new ByteArraySource("[]".getBytes("UTF-8"))).iterator().hasNext());
         assertFalse(new JSONInput().read(new ByteArraySource("".getBytes("UTF-8"))).iterator().hasNext());
         
         for(JSONObject record : new JSONInput().read(new ByteArraySource("{}{}{}".getBytes("UTF-8"))))

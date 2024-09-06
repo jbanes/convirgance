@@ -62,9 +62,11 @@ public class JSONInput implements Input<JSONObject>
 
             while(c >= 0 && c != '{')
             {
+                if(c == ']') return false;
+                
                 if(!Character.isWhitespace(c) && c != '[' && c != ',')
                 {
-                    throw new ConvirganceException("Unexpected character: " + c + " (0x" + Integer.toHexString(c) + ")");
+                    throw new ConvirganceException("Unexpected character: " + (char)c + " (0x" + Integer.toHexString(c) + ")");
                 }
                 
                 reader.mark(16);
