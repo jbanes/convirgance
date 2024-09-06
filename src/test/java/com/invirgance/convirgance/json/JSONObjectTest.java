@@ -197,4 +197,26 @@ public class JSONObjectTest
         assertTrue(record.getBoolean("boolean"));
         assertNull(record.get("null"));
     }
+    
+    @Test
+    public void testCopy() throws Exception
+    {
+        JSONObject record = new JSONObject("{\"number\":1337,\"boolean\":true,\"string\":\"Hello world!\",\"null\":null,\"double\":3.14159}");
+        
+        assertEquals(5, record.size());
+        assertEquals("Hello world!", record.get("string"));
+        assertEquals(1337, record.get("number"));
+        assertEquals(3.14159, record.get("double"));
+        assertTrue(record.getBoolean("boolean"));
+        assertNull(record.get("null"));
+        
+        record = new JSONObject(record);
+                
+        assertEquals(5, record.size());
+        assertEquals("Hello world!", record.get("string"));
+        assertEquals(1337, record.get("number"));
+        assertEquals(3.14159, record.get("double"));
+        assertTrue(record.getBoolean("boolean"));
+        assertNull(record.get("null"));
+    }
 }

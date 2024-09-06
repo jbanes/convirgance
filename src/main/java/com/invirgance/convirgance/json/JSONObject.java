@@ -54,7 +54,7 @@ public class JSONObject implements Map<String, Object>
     {
         this();
         
-        map.putAll(map);
+        this.map.putAll(map);
     }
     
     @Override
