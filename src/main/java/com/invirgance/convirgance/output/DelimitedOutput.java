@@ -79,8 +79,7 @@ public class DelimitedOutput implements Output
         private String[] detectColumns(JSONObject record)
         {
             Set<String> keys = record.keySet();
-System.out.println(record);
-System.out.println(keys);
+
             return keys.toArray(String[]::new);
         }
     

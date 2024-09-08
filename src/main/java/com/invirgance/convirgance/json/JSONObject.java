@@ -252,17 +252,16 @@ public class JSONObject implements Map<String, Object>
     {
         int hash = 0xC0FFEE;
         Object value;
-//System.out.println("---------");
+
         for(String key : keySet())
         {
             value = get(key);
             
             if(value == null) continue;
-//System.out.println(Integer.toHexString(hash)+":"+Integer.toHexString(value.hashCode())+":"+key+":["+value+"]"+":"+value.getClass());
+
             hash += value.hashCode();
-//System.out.println(Integer.toHexString(hash));
         }
-//System.out.println("=========");
+
         return hash + size();
     }
 }
