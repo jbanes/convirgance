@@ -41,6 +41,9 @@ public class JSONInputTest
         assertFalse(new JSONInput().read(new ByteArraySource("[]".getBytes("UTF-8"))).iterator().hasNext());
         assertFalse(new JSONInput().read(new ByteArraySource("".getBytes("UTF-8"))).iterator().hasNext());
         
+        assertTrue(new JSONInput().read(new ByteArraySource("{}".getBytes("UTF-8"))).iterator().hasNext());
+        assertTrue(new JSONInput().read(new ByteArraySource("[{}]".getBytes("UTF-8"))).iterator().hasNext());
+        
         for(JSONObject record : new JSONInput().read(new ByteArraySource("{}{}{}".getBytes("UTF-8"))))
         {
             assertEquals(0, record.size());
@@ -77,5 +80,30 @@ public class JSONInputTest
         }
         
         assertEquals(3, count);
+    }
+    
+    @Test
+    public void testSingleObject() throws Exception
+    {
+        assertTrue(new JSONInput().read(new ByteArraySource(("{\n" +
+                                                            "    \"id\": -1,\n" +
+                                                            "    \"AreaCode\": null,\n" +
+                                                            "    \"AreaName\": \"Unknown\",\n" +
+                                                            "    \"CityName\": \"Unknown\",\n" +
+                                                            "    \"CityNameKatakana\": null,\n" +
+                                                            "    \"CountryCode\": \"XX\",\n" +
+                                                            "    \"DistrictName\": \"Unknown\",\n" +
+                                                            "    \"DistrictNameKatakana\": null,\n" +
+                                                            "    \"DistrictCode\": null,\n" +
+                                                            "    \"LocaleName\": \"Unknown\",\n" +
+                                                            "    \"PostOfficeAddress\": null,\n" +
+                                                            "    \"PostOfficeState\": null,\n" +
+                                                            "    \"PostOfficeZip4\": null,\n" +
+                                                            "    \"PostOfficeCity\": null,\n" +
+                                                            "    \"PostOfficeZip\": null,\n" +
+                                                            "    \"PrefectureName\": null,\n" +
+                                                            "    \"PrefectureNameKatakana\": null,\n" +
+                                                            "    \"ZipCode\": null\n" +
+                                                            "}").getBytes("UTF-8"))).iterator().hasNext());
     }
 }

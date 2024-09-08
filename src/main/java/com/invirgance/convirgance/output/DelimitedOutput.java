@@ -57,59 +57,62 @@ public class DelimitedOutput implements Output
         this.columns = columns;
         this.delimiter = delimiter;
     }
-    
-    private String[] detectColumns(JSONObject record)
-    {
-        Set<String> keys = record.keySet();
-
-        return keys.toArray(String[]::new);
-    }
-    
-    private String stringify(JSONObject record)
-    {
-        StringBuffer buffer = new StringBuffer();
-        Object value;
-        
-        for(int i=0; i<columns.length; i++)
-        {
-            if(i > 0) buffer.append(delimiter);
-            
-            value = record.get(columns[i]);
-            
-            if(value != null) buffer.append(value.toString());
-        }
-        
-        return buffer.toString();
-    }
-    
-    private String stringify(String[] columns)
-    {
-        StringBuffer buffer = new StringBuffer();
-        
-        for(int i=0; i<columns.length; i++)
-        {
-            if(i > 0) buffer.append(delimiter);
-            
-            buffer.append(columns[i]);
-        }
-        
-        return buffer.toString();
-    }
 
     @Override
     public OutputCursor write(Target target)
     {
-        return new DelimitedOutputWriter(target);
+        return new DelimitedOutputWriter(target, this.columns);
     }
     
     private class DelimitedOutputWriter implements OutputCursor
     {
         private Target target;
         private PrintWriter out;
+        private String[] columns;
 
-        public DelimitedOutputWriter(Target target)
+        public DelimitedOutputWriter(Target target, String[] columns)
         {
             this.target = target;
+            this.columns = columns;
+        }
+    
+        private String[] detectColumns(JSONObject record)
+        {
+            Set<String> keys = record.keySet();
+System.out.println(record);
+System.out.println(keys);
+            return keys.toArray(String[]::new);
+        }
+    
+        private String stringify(String[] columns)
+        {
+            StringBuffer buffer = new StringBuffer();
+
+            for(int i=0; i<columns.length; i++)
+            {
+                if(i > 0) buffer.append(delimiter);
+
+                buffer.append(columns[i]);
+            }
+
+            return buffer.toString();
+        }
+    
+        private String stringify(JSONObject record)
+        {
+            StringBuffer buffer = new StringBuffer();
+            Object value;
+
+            for(int i=0; i<columns.length; i++)
+            {
+                if(i > 0) buffer.append(delimiter);
+
+                value = record.get(columns[i]);
+
+                if(value != null) buffer.append(value.toString());
+            }
+
+            return buffer.toString();
         }
         
         @Override

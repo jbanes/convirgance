@@ -330,7 +330,6 @@ public class JSONParser implements AutoCloseable
             
             if(c == '}')
             {
-                peekPrintable();
                 return object;
             }
             

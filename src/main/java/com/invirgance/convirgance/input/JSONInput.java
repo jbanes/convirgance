@@ -57,7 +57,7 @@ public class JSONInput implements Input<JSONObject>
             int c;
             
             reader.mark(16);
-                
+
             c = reader.read();
 
             while(c >= 0 && c != '{')
