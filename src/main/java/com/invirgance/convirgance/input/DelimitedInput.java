@@ -168,7 +168,7 @@ public class DelimitedInput implements Input<JSONObject>
                     @Override
                     public JSONObject next()
                     {
-                        JSONObject record = new JSONObject();
+                        JSONObject record = new JSONObject(true);
                         String[] data = parseLine(line, delimiter);
 
                         for(int i=0; i<columns.length; i++)

@@ -156,7 +156,7 @@ public class DBMS
         @Override
         public JSONObject next()
         {
-            JSONObject result = new JSONObject();
+            JSONObject result = new JSONObject(true);
             
             try
             {

@@ -81,7 +81,7 @@ public class QueryTest
         }
         catch(ConvirganceException e)
         {
-            assertEquals("Duplicate binding for bound name: dupe", e.getMessage());
+            assertEquals("Duplicate binding for bound name: DUPE", e.getMessage());
         }
     }
     

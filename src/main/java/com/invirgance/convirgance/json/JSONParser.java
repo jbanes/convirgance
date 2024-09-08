@@ -295,7 +295,7 @@ public class JSONParser implements AutoCloseable
     
     public JSONObject parseObject() throws IOException
     {
-        JSONObject object = new JSONObject();
+        JSONObject object = new JSONObject(true);
         String key;
         
         char c = nextPrintable();

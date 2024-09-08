@@ -23,10 +23,7 @@ package com.invirgance.convirgance.json;
 
 import com.invirgance.convirgance.ConvirganceException;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -35,17 +32,33 @@ import java.util.Set;
 public class JSONObject implements Map<String, Object>
 {
     private final HashMap<String, Object> map;
+    
+    private boolean ordered = false;
+    private OrderedKeys<String> orderedKeys;
 
     public JSONObject()
     {
+        this(false);
+    }
+
+    public JSONObject(boolean ordered)
+    {
         map = new HashMap<>();
+        
+        if(ordered) setOrdered(ordered);
     }
 
     public JSONObject(String json)
     {
+        JSONObject object;
+        
         try
         {
-            this.map = new JSONParser(json).parseObject().map;
+            object = new JSONParser(json).parseObject();
+            
+            this.map = object.map;
+            this.ordered = object.ordered;
+            this.orderedKeys = object.orderedKeys;
         }
         catch(IOException e) { throw new ConvirganceException(e); }
     }
@@ -55,6 +68,36 @@ public class JSONObject implements Map<String, Object>
         this();
         
         this.map.putAll(map);
+        
+        if(map instanceof JSONObject)
+        {
+            if(((JSONObject)map).isOrdered())
+            {
+                this.ordered = true;
+                this.orderedKeys = new OrderedKeys<>(((JSONObject)map).orderedKeys);
+            }
+        }
+    }
+
+    public boolean isOrdered()
+    {
+        return ordered;
+    }
+
+    public void setOrdered(boolean ordered)
+    {
+        if(ordered && !this.ordered) 
+        {
+            orderedKeys = new OrderedKeys<>();
+            
+            for(String key : this.map.keySet()) orderedKeys.add(key);
+        }
+        else if(!ordered)
+        {
+            orderedKeys = null;
+        }
+        
+        this.ordered = ordered;
     }
     
     @Override
@@ -157,30 +200,46 @@ public class JSONObject implements Map<String, Object>
     @Override
     public Object put(String key, Object value)
     {
+        if(ordered && !orderedKeys.contains(key)) orderedKeys.add(key);
+        
         return this.map.put(key, value);
     }
 
     @Override
     public Object remove(Object key)
     {
+        if(ordered) orderedKeys.remove((String)key);
+        
         return this.map.remove(key);
     }
 
     @Override
     public void putAll(Map<? extends String, ? extends Object> map)
     {
+        if(ordered)
+        {
+            for(String key : map.keySet())
+            {
+                if(!orderedKeys.contains(key)) orderedKeys.add(key);
+            }
+        }
+        
         this.map.putAll(map);
     }
 
     @Override
     public void clear()
     {
+        if(ordered) orderedKeys.clear();
+        
         this.map.clear();
     }
 
     @Override
     public Set<String> keySet()
     {
+        if(ordered) return orderedKeys;
+        
         return this.map.keySet();
     }
 
@@ -263,5 +322,18 @@ public class JSONObject implements Map<String, Object>
         }
 
         return hash + size();
+    }
+    
+    private class OrderedKeys<T> extends ArrayList<T> implements Set<T>
+    {
+        public OrderedKeys()
+        {
+            super();
+        }
+        
+        public OrderedKeys(Collection collection)
+        {
+            super(collection);
+        }
     }
 }

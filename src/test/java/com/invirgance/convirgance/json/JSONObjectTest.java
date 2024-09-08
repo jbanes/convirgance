@@ -219,4 +219,58 @@ public class JSONObjectTest
         assertTrue(record.getBoolean("boolean"));
         assertNull(record.get("null"));
     }
+    
+    @Test
+    public void testOrdered()
+    {
+        JSONObject record = new JSONObject(true);
+        JSONObject record2;
+        int index = 1;
+        
+        record.setOrdered(true);
+        
+        record.put("Item 1", 1);
+        record.put("Item 2", 2);
+        record.put("Item 3", 3);
+        record.put("Item 4", 4);
+        record.put("Item 5", 5);
+        
+        for(String key : record.keySet())
+        {
+            assertEquals("Item " + index, key);
+            assertEquals(index, record.get(key));
+            
+            index++;
+        }
+        
+        record.remove("Item 2");
+        record.remove("Item 1");
+        
+        index = 3;
+        
+        for(String key : record.keySet())
+        {
+            assertEquals("Item " + index, key);
+            assertEquals(index, record.get(key));
+            
+            index++;
+        }
+        
+        // Validate that ordering carries from object to object
+        record2 = new JSONObject(record);
+        
+        record.setOrdered(false);
+        
+        assertFalse(record.isOrdered());
+        
+        index = 3;
+        
+        for(String key : record2.keySet())
+        {
+            assertEquals("Item " + index, key);
+            assertEquals(index, record2.get(key));
+            
+            index++;
+        }
+    }
 }
