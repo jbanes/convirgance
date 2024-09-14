@@ -105,6 +105,46 @@ public class JSONObjectTest
     }
     
     @Test
+    public void testDoubles()
+    {
+        JSONObject record = new JSONObject();
+        
+        record.put("double", 13.37);
+        record.put("doubleString", "13.37");
+        record.put("doubleNull", null);
+        record.put("notDouble", false);
+        
+        assertEquals(13.37, (Double)record.get("double"));
+        assertEquals(13.37, record.getDouble("double"));
+        assertEquals(13.37, record.getDouble("doubleString"));
+        assertEquals(13.37, record.getDouble("double", 73.31));
+        assertEquals(13.37, record.getDouble("doubleString", 73.31));
+        assertEquals(13.37, record.getDouble("doubleNull", 13.37));
+        assertNull(record.get("doubleNull"));
+        
+        try 
+        {
+            record.getDouble("doubleNull");
+            fail("Expected failure on null lookup");
+        } 
+        catch(ConvirganceException e) { assertEquals("doubleNull is null and therefore can't be converted to a double", e.getMessage()); }
+        
+        try 
+        {
+            record.getDouble("notDouble");
+            fail("Expected failure on lookup of non-double value");
+        } 
+        catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notDouble cannot be converted to a double", e.getMessage()); }
+        
+        try 
+        {
+            record.getDouble("notDouble", 1337);
+            fail("Expected failure on lookup of non-double value");
+        } 
+        catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notDouble cannot be converted to a double", e.getMessage()); }
+    }
+    
+    @Test
     public void testInts()
     {
         JSONObject record = new JSONObject();
@@ -120,7 +160,7 @@ public class JSONObjectTest
         assertEquals(1337, record.getInt("integer", 7331));
         assertEquals(1337, record.getInt("integerString", 7331));
         assertEquals(1337, record.getInt("integerNull", 1337));
-        assertNull(record.get("booleanNull"));
+        assertNull(record.get("integerNull"));
         
         try 
         {
@@ -132,14 +172,14 @@ public class JSONObjectTest
         try 
         {
             record.getInt("notInteger");
-            fail("Expected failure on lookup of non-boolean value");
+            fail("Expected failure on lookup of non-integer value");
         } 
         catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notInteger cannot be converted to an int", e.getMessage()); }
         
         try 
         {
             record.getInt("notInteger", 1337);
-            fail("Expected failure on lookup of non-boolean value");
+            fail("Expected failure on lookup of non-integer value");
         } 
         catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notInteger cannot be converted to an int", e.getMessage()); }
     }
