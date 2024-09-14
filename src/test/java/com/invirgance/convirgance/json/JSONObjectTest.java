@@ -22,7 +22,6 @@ SOFTWARE.
 package com.invirgance.convirgance.json;
 
 import com.invirgance.convirgance.ConvirganceException;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -182,6 +181,36 @@ public class JSONObjectTest
             fail("Expected failure on lookup of non-integer value");
         } 
         catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notInteger cannot be converted to an int", e.getMessage()); }
+    }
+        
+    @Test
+    public void testJSONObjects()
+    {
+        JSONObject record = new JSONObject();
+        
+        record.put("object", new JSONObject("{\"x\":true,\"y\":false}"));
+        record.put("objectNull", null);
+        record.put("notObject", false);
+        
+        assertEquals(new JSONObject("{\"x\":true,\"y\":false}"), (JSONObject)record.get("object"));
+        assertEquals(new JSONObject("{\"x\":true,\"y\":false}"), record.getJSONObject("object"));
+        assertEquals(new JSONObject("{\"x\":true,\"y\":false}"), record.getJSONObject("object", new JSONObject("{\"z\":false}")));
+        assertEquals(new JSONObject("{\"x\":true,\"y\":false}"), record.getJSONObject("objectNull", new JSONObject("{\"x\":true,\"y\":false}")));
+        assertNull(record.getJSONObject("objectNull"));
+        
+        try 
+        {
+            record.getJSONObject("notObject");
+            fail("Expected failure on lookup of non-object value");
+        } 
+        catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notObject cannot be converted to a JSONObject", e.getMessage()); }
+        
+        try 
+        {
+            record.getJSONObject("notObject", new JSONObject("{\"x\":true,\"y\":false}"));
+            fail("Expected failure on lookup of non-object value");
+        } 
+        catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notObject cannot be converted to a JSONObject", e.getMessage()); }
     }
     
     @Test

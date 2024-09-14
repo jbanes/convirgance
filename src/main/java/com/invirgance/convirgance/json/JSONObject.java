@@ -201,6 +201,26 @@ public class JSONObject implements Map<String, Object>
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to an int");
     }
     
+    public JSONObject getJSONObject(String key) throws ConvirganceException
+    {
+        Object value = this.map.get(key);
+        
+        if(value == null) return null;
+        if(value instanceof JSONObject) return ((JSONObject)value);
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a JSONObject");
+    }
+    
+    public JSONObject getJSONObject(String key, JSONObject defaultValue) throws ConvirganceException
+    {
+        Object value = this.map.get(key);
+        
+        if(value == null) return defaultValue;
+        if(value instanceof JSONObject) return ((JSONObject)value);
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a JSONObject");
+    }
+    
     public String getString(String key)
     {
         Object value = this.map.get(key);
