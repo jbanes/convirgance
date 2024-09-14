@@ -165,6 +165,26 @@ public class JSONArray<T> implements List<T>
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a boolean");
     }
     
+    public JSONObject getJSONObject(int index)
+    {
+        Object value = this.list.get(index);
+        
+        if(value == null) return null;
+        if(value instanceof JSONObject) return ((JSONObject)value);
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONObject");
+    }
+    
+    public JSONObject getJSONObject(int index, JSONObject defaultValue)
+    {
+        Object value = this.list.get(index);
+        
+        if(value == null) return defaultValue;
+        if(value instanceof JSONObject) return ((JSONObject)value);
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONObject");
+    }
+    
     public Object getString(int index)
     {
         Object value = this.list.get(index);

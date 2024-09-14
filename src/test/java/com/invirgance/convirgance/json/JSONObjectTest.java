@@ -184,6 +184,36 @@ public class JSONObjectTest
     }
         
     @Test
+    public void testJSONArray()
+    {
+        JSONObject record = new JSONObject();
+        
+        record.put("array", new JSONArray("[true,false]"));
+        record.put("arrayNull", null);
+        record.put("notArray", false);
+        
+        assertEquals(new JSONArray("[true,false]"), (JSONArray)record.get("array"));
+        assertEquals(new JSONArray("[true,false]"), record.getJSONArray("array"));
+        assertEquals(new JSONArray("[true,false]"), record.getJSONArray("array", new JSONArray("[false]")));
+        assertEquals(new JSONArray("[true,false]"), record.getJSONArray("arrayNull", new JSONArray("[true,false]")));
+        assertNull(record.getJSONArray("arrayNull"));
+        
+        try 
+        {
+            record.getJSONArray("notArray");
+            fail("Expected failure on lookup of non-array value");
+        } 
+        catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notArray cannot be converted to a JSONArray", e.getMessage()); }
+        
+        try 
+        {
+            record.getJSONArray("notArray", new JSONArray("[true,false]"));
+            fail("Expected failure on lookup of non-array value");
+        } 
+        catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notArray cannot be converted to a JSONArray", e.getMessage()); }
+    }
+        
+    @Test
     public void testJSONObjects()
     {
         JSONObject record = new JSONObject();
