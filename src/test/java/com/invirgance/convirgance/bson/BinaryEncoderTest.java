@@ -85,13 +85,13 @@ public class BinaryEncoderTest
         
         in = new DataInputStream(new ByteArrayInputStream(buffer.toByteArray()));
         
-        assertEquals(33, buffer.size());
+        assertEquals(30, buffer.size());
         assertEquals(BinaryEncoder.TYPE_BYTE, in.read());
         assertEquals(1, in.read());
         assertEquals(BinaryEncoder.TYPE_SHORT, in.read());
         assertEquals(2, in.readShort());
-        assertEquals(BinaryEncoder.TYPE_INTEGER, in.read());
-        assertEquals(3, in.readInt());
+        assertEquals(BinaryEncoder.TYPE_INTEGER_U8, in.read());
+        assertEquals(3, in.readUnsignedByte());
         assertEquals(BinaryEncoder.TYPE_LONG, in.read());
         assertEquals(456789L, in.readLong());
         assertEquals(BinaryEncoder.TYPE_FLOAT, in.read());
@@ -130,7 +130,7 @@ public class BinaryEncoderTest
         
         in = new DataInputStream(new ByteArrayInputStream(buffer.toByteArray()));
         
-        assertEquals(39, buffer.size());
+        assertEquals(36, buffer.size());
         
         assertEquals(BinaryEncoder.TYPE_OBJECT, in.read());
         assertEquals(3, in.readUnsignedShort());   // 3 keys in object
@@ -138,8 +138,8 @@ public class BinaryEncoderTest
         assertEquals(1, in.readShort()); // y
         assertEquals(2, in.readShort()); // z
         
-        assertEquals(BinaryEncoder.TYPE_INTEGER, in.read());
-        assertEquals(1, in.readInt());
+        assertEquals(BinaryEncoder.TYPE_INTEGER_U8, in.read());
+        assertEquals(1, in.readUnsignedByte());
         
         assertEquals(BinaryEncoder.TYPE_STRING, in.read());
         assertEquals("Hi", in.readUTF());
@@ -169,12 +169,12 @@ public class BinaryEncoderTest
         
         in = new DataInputStream(new ByteArrayInputStream(buffer.toByteArray()));
         
-        assertEquals(28, buffer.size());
+        assertEquals(25, buffer.size());
         assertEquals(BinaryEncoder.TYPE_ARRAY, in.read());
         assertEquals(3, in.readInt());
         
-        assertEquals(BinaryEncoder.TYPE_INTEGER, in.read());
-        assertEquals(123, in.readInt());
+        assertEquals(BinaryEncoder.TYPE_INTEGER_U8, in.read());
+        assertEquals(123, in.readUnsignedByte());
         
         assertEquals(BinaryEncoder.TYPE_BOOLEAN_TRUE, in.read());
         

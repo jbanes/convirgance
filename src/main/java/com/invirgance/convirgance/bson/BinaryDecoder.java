@@ -126,6 +126,12 @@ public class BinaryDecoder
             case TYPE_LONG:
                 return in.readLong();
                 
+            case TYPE_INTEGER_U8:
+                return in.readUnsignedByte();
+                
+            case TYPE_INTEGER_U16:
+                return in.readUnsignedShort();
+                
             case TYPE_INTEGER:
                 return in.readInt();
                 

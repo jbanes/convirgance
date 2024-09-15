@@ -74,22 +74,22 @@ public class BSONOutput implements Output
         
         public BSONOutputCursor(Target target, boolean compressed)
         {
-            BufferedOutputStream buffered;
+            OutputStream out;
             
             try
             {
-                buffered = new BufferedOutputStream(target.getOutputStream(), 16 * 1024);
+                out = target.getOutputStream();
                 
-                buffered.write(0xFF);
-                buffered.write(0xFF);
-                buffered.write('B');
-                buffered.write('S');
-                buffered.write('O');
-                buffered.write('N');
-                buffered.write(0x01); // Version 1
-                buffered.write(getFlags(compressed)); // Flags
+                out.write(0xFF);
+                out.write(0xFF);
+                out.write('B');
+                out.write('S');
+                out.write('O');
+                out.write('N');
+                out.write(0x01); // Version 1
+                out.write(getFlags(compressed)); // Flags
                 
-                this.out = new DataOutputStream(compressed ? new GZIPOutputStream(buffered) : buffered);
+                this.out = new DataOutputStream(compressed ? new GZIPOutputStream(out, 4 * 1024 * 1024) : new BufferedOutputStream(out, 4 * 1024 * 1024));
                 this.keys = new KeyStreamEncoder();
                 this.json = new BinaryEncoder(keys);
             }

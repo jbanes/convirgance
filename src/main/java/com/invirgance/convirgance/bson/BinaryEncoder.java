@@ -47,6 +47,10 @@ public class BinaryEncoder
     public static final int TYPE_BOOLEAN_TRUE = 'T';
     public static final int TYPE_BOOLEAN_FALSE = 'F';
     public static final int TYPE_CLOB = 0x0B;
+    
+    public static final int TYPE_INTEGER_U8 = 0x20;
+    public static final int TYPE_INTEGER_U16 = 0x21;
+    
     public static final int TYPE_EOF = 0xFF;
     
     private KeyEncoder keys;
@@ -137,7 +141,11 @@ public class BinaryEncoder
     
     private void writeNumber(Number value, DataOutput out) throws IOException
     {
+        int integer = (value instanceof Integer ? value.intValue() : 0);
+        
         if(value instanceof Long) out.writeByte(TYPE_LONG);
+        else if(value instanceof Integer && integer >= 0 && integer < 256) out.writeByte(TYPE_INTEGER_U8);
+        else if(value instanceof Integer && integer > 0 && integer < 65536) out.writeByte(TYPE_INTEGER_U16);
         else if(value instanceof Integer) out.writeByte(TYPE_INTEGER);
         else if(value instanceof Double) out.writeByte(TYPE_DOUBLE);
         else if(value instanceof Float) out.writeByte(TYPE_FLOAT);
@@ -146,6 +154,8 @@ public class BinaryEncoder
         else throw new IllegalArgumentException("Unknown number type " + value.getClass());
         
         if(value instanceof Long) out.writeLong(value.longValue());
+        else if(value instanceof Integer && integer >= 0 && integer < 256) out.writeByte(integer);
+        else if(value instanceof Integer && integer > 0 && integer < 65536) out.writeShort(integer);
         else if(value instanceof Integer) out.writeInt(value.intValue());
         else if(value instanceof Double) out.writeDouble(value.doubleValue());
         else if(value instanceof Float) out.writeFloat(value.floatValue());

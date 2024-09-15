@@ -90,7 +90,7 @@ public class BinaryDecoderTest
         
         in = new DataInputStream(new ByteArrayInputStream(buffer.toByteArray()));
         
-        assertEquals(33, buffer.size());
+        assertEquals(30, buffer.size());
         assertEquals((byte)1, decoder.read(in));
         assertEquals((short)2, decoder.read(in));
         assertEquals((int)3, decoder.read(in));
@@ -129,7 +129,7 @@ public class BinaryDecoderTest
         
         record = (JSONObject)decoder.read(in);
         
-        assertEquals(39, buffer.size());
+        assertEquals(36, buffer.size());
         assertEquals(3, record.size());
         assertEquals(1, record.get("x"));
         assertEquals("Hi", record.get("y"));
@@ -169,7 +169,7 @@ public class BinaryDecoderTest
         
         record = (JSONArray)decoder.read(in);
         
-        assertEquals(28, buffer.size());
+        assertEquals(25, buffer.size());
         assertEquals(3, record.size());
         assertEquals(123, record.get(0));
         assertEquals(Boolean.TRUE, record.get(1));
