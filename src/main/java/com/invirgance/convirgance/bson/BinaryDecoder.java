@@ -66,7 +66,7 @@ public class BinaryDecoder
     
     private JSONObject readObject(DataInput in) throws IOException
     {
-        JSONObject record = new JSONObject();
+        JSONObject record = new JSONObject(true);
         int size = in.readUnsignedShort();
         int[] ids = new int[size];
         
