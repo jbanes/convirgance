@@ -90,11 +90,13 @@ public class BSONInput implements Input<JSONObject>
             return new CloseableIterator<JSONObject>() {
                 
                 private JSONObject record;
+                private boolean closed;
                 
                 @Override
                 public boolean hasNext()
                 {
                     if(record != null) return true;
+                    if(closed) return false;
                     
                     try
                     {
@@ -132,6 +134,8 @@ public class BSONInput implements Input<JSONObject>
                 public void close() throws Exception
                 {
                     in.close();
+                    
+                    closed = true;
                 }
             };
         }
