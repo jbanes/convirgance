@@ -40,7 +40,7 @@ public class BSONOutput implements Output
 
     public BSONOutput()
     {
-        this(true);
+        this(false); // TODO: Need a multithreaded GZipping to speed up compressed data. Then we can make compressed the default.
     }
 
     public BSONOutput(boolean compressed)
