@@ -54,6 +54,7 @@ public class BinaryEncoder
     public static final int TYPE_EOF = 0xFF;
     
     private KeyEncoder keys;
+    private StringEncoder strings;
     
 
     public BinaryEncoder()
@@ -64,6 +65,7 @@ public class BinaryEncoder
     public BinaryEncoder(KeyEncoder keys)
     {
         this.keys = keys;
+        this.strings = new StringEncoder();
     }
     
     public Integer getKey(String key)
@@ -85,8 +87,18 @@ public class BinaryEncoder
     {
         return keys;
     }
+
+    public StringEncoder getStringEncoder()
+    {
+        return strings;
+    }
     
     private void writeString(String value, DataOutput out) throws IOException
+    {
+        writeString(value, out, null);
+    }
+    
+    private void writeString(String value, DataOutput out, Integer index) throws IOException
     {
         if(value.length() > Short.MAX_VALUE)
         {
@@ -97,16 +109,21 @@ public class BinaryEncoder
             return;
         }
         
+        if(index == null) index = strings.write(value, out);
+        
         out.writeByte(TYPE_STRING);
-        out.writeUTF(value);
+        out.writeByte(index);
+//        out.writeUTF(value);
+        
     }
     
     private void writeObject(JSONObject value, DataOutput out) throws IOException
     {
         int[] ids = new int[value.size()];
         int index = 0;
+        Object pair;
         
-        // Ensure all the keys are registered
+        // Ensure all the keys and strings are registered
         for(String key : value.keySet()) 
         {
             ids[index++] = keys.write(key, out);

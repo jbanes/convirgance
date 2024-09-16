@@ -24,6 +24,7 @@ package com.invirgance.convirgance.bson;
 
 import static com.invirgance.convirgance.bson.BinaryEncoder.*;
 import static com.invirgance.convirgance.bson.KeyEncoder.*;
+import static com.invirgance.convirgance.bson.StringEncoder.*;
 
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
@@ -38,6 +39,7 @@ import java.util.Date;
 public class BinaryDecoder
 {
     private KeyEncoder keys;
+    private StringEncoder strings;
 
     public BinaryDecoder()
     {
@@ -47,6 +49,7 @@ public class BinaryDecoder
     public BinaryDecoder(KeyEncoder keys)
     {
         this.keys = keys;
+        this.strings = new StringEncoder();
     }
     
     public String getKey(int id)
@@ -62,6 +65,11 @@ public class BinaryDecoder
     public KeyEncoder getKeyEncoder()
     {
         return keys;
+    }
+
+    public StringEncoder getStringEncoder()
+    {
+        return strings;
     }
     
     private JSONObject readObject(DataInput in) throws IOException
@@ -115,7 +123,7 @@ public class BinaryDecoder
                 return null;
                 
             case TYPE_STRING:
-                return in.readUTF();
+                return strings.get(in.readByte() & 0xFF);
                 
             case TYPE_OBJECT:
                 return readObject(in);
@@ -165,6 +173,10 @@ public class BinaryDecoder
                 
             case KEY_RESET_OPERATION:
                 keys.reset(null);
+                return read(in);
+                
+            case STRING_REGISTER_OPERATION:
+                strings.read(in);
                 return read(in);
             
             // EOF
